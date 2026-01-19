@@ -104,7 +104,7 @@ app.post('/verify-code', async (req, res) => {
   }
   
   // Redirect back to login page
-  res.redirect('/');
+  res.redirect('/verification.html');
 });
 
 // View all saved users from database
